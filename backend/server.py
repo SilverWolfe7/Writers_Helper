@@ -66,7 +66,7 @@ def create_refresh_token(user_id: str) -> str:
     return jwt.encode(payload, get_jwt_secret(), algorithm=JWT_ALGORITHM)
 
 
-def set_auth_cookies(response: Response, user_id: str, email: str) -> None:
+def set_auth_cookies(response: Response, user_id: str, email: str) -> str:
     access_token = create_access_token(user_id, email)
     refresh_token = create_refresh_token(user_id)
     response.set_cookie(
@@ -87,6 +87,7 @@ def set_auth_cookies(response: Response, user_id: str, email: str) -> None:
         max_age=REFRESH_TOKEN_DAYS * 24 * 60 * 60,
         path="/",
     )
+    return access_token
 
 
 async def get_current_user(request: Request) -> dict:
@@ -129,6 +130,15 @@ class UserOut(BaseModel):
     name: str
     role: str = "user"
     created_at: str
+
+
+class AuthOut(BaseModel):
+    id: str
+    email: EmailStr
+    name: str
+    role: str = "user"
+    created_at: str
+    access_token: str
 
 
 class ProjectIn(BaseModel):
@@ -211,7 +221,7 @@ def new_id() -> str:
 
 
 # --- Auth endpoints ---
-@api_router.post("/auth/register", response_model=UserOut)
+@api_router.post("/auth/register", response_model=AuthOut)
 async def register(body: RegisterIn, response: Response):
     email = body.email.lower()
     existing = await db.users.find_one({"email": email})
@@ -226,21 +236,21 @@ async def register(body: RegisterIn, response: Response):
         "created_at": now_iso(),
     }
     await db.users.insert_one(user_doc)
-    set_auth_cookies(response, user_doc["id"], email)
+    access_token = set_auth_cookies(response, user_doc["id"], email)
     user_doc.pop("password_hash", None)
     user_doc.pop("_id", None)
-    return user_doc
+    return {**user_doc, "access_token": access_token}
 
 
-@api_router.post("/auth/login", response_model=UserOut)
+@api_router.post("/auth/login", response_model=AuthOut)
 async def login(body: LoginIn, response: Response):
     email = body.email.lower()
     user = await db.users.find_one({"email": email}, {"_id": 0})
     if not user or not verify_password(body.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
-    set_auth_cookies(response, user["id"], email)
+    access_token = set_auth_cookies(response, user["id"], email)
     user.pop("password_hash", None)
-    return user
+    return {**user, "access_token": access_token}
 
 
 @api_router.post("/auth/logout")

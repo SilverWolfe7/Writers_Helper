@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Scribeverse",
+    "slug": "scribeverse",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "scribeverse",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.scribeverse.mobile",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Scribeverse uses your microphone to transcribe your dictation into notes.",
+        "NSSpeechRecognitionUsageDescription": "Scribeverse transcribes your voice on-device to capture your story ideas as notes."
+      }
+    },
+    "android": {
+      "package": "app.scribeverse.mobile",
+      "permissions": ["RECORD_AUDIO"]
+    },
+    "plugins": [
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Scribeverse uses your microphone to transcribe your dictation into notes.",
+          "speechRecognitionPermission": "Scribeverse transcribes your voice on-device to capture your story ideas as notes."
+        }
+      ]
+    ],
+    "extra": {
+      "backendUrl": "https://voice-notes-writer-1.preview.emergentagent.com"
+    }
+  }
+}
