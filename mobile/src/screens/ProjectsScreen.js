@@ -60,7 +60,7 @@ export default function ProjectsScreen({ navigation }) {
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <View style={styles.header}>
         <View>
-          <Overline>Scribeverse</Overline>
+          <Overline>Writer&apos;s Helper</Overline>
           <Text style={styles.brand}>Your writing desk</Text>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>

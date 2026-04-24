@@ -208,7 +208,7 @@ class NoteOut(NoteIn):
 
 
 # --- FastAPI app ---
-app = FastAPI(title="Scribeverse API")
+app = FastAPI(title="Writer's Helper API")
 api_router = APIRouter(prefix="/api")
 
 

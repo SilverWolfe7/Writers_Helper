@@ -68,7 +68,7 @@ export default function SetupScreen({ navigation }) {
 
   const openSettings = () => {
     Linking.openSettings().catch(() => {
-      Alert.alert("Unable to open Settings", "Please open Settings → Scribeverse manually.");
+      Alert.alert("Unable to open Settings", "Please open Settings → Writer's Helper manually.");
     });
   };
 
@@ -93,10 +93,10 @@ export default function SetupScreen({ navigation }) {
       <ScrollView contentContainerStyle={{ padding: 24, paddingBottom: 80 }}>
         <Overline>Step 01 · Permissions</Overline>
         <H1 style={{ marginTop: 8, marginBottom: 14 }}>
-          Grant Scribeverse access to your microphone.
+          Grant Writer&apos;s Helper access to your microphone.
         </H1>
         <Muted style={{ marginBottom: 28, lineHeight: 22 }}>
-          Scribeverse uses your iPhone's microphone and on-device speech recognition to transcribe your dictation
+          Writer&apos;s Helper uses your iPhone&apos;s microphone and on-device speech recognition to transcribe your dictation
           into written notes. Audio never leaves your device — only the final transcript is saved to your writing
           projects.
         </Muted>
@@ -134,12 +134,12 @@ export default function SetupScreen({ navigation }) {
           )}
           {status === STATE.BLOCKED && (
             <Muted style={{ marginTop: 10 }}>
-              iOS is blocking the prompt. Open Settings → Scribeverse and turn on Microphone + Speech Recognition.
+              iOS is blocking the prompt. Open Settings → Writer&apos;s Helper and turn on Microphone + Speech Recognition.
             </Muted>
           )}
           {status === STATE.UNAVAILABLE && (
             <Muted style={{ marginTop: 10 }}>
-              Voice dictation needs a Scribeverse dev build. In Expo Go you can still type notes manually — that
+              Voice dictation needs a Writer&apos;s Helper dev build. In Expo Go you can still type notes manually — that
               works everywhere.
             </Muted>
           )}
@@ -197,7 +197,7 @@ export default function SetupScreen({ navigation }) {
           />
           <BulletRow
             title="What's NOT collected"
-            body="No raw audio is uploaded. Only the transcript you choose to save is sent to your Scribeverse account."
+            body="No raw audio is uploaded. Only the transcript you choose to save is sent to your Writer's Helper account."
           />
         </View>
       </ScrollView>

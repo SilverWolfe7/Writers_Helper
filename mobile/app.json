@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Scribeverse",
+    "name": "Writer's Helper",
     "slug": "scribeverse",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,8 +11,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "app.scribeverse.mobile",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Scribeverse uses your microphone to transcribe your dictation into notes.",
-        "NSSpeechRecognitionUsageDescription": "Scribeverse transcribes your voice on-device to capture your story ideas as notes."
+        "NSMicrophoneUsageDescription": "Writer's Helper uses your microphone to transcribe your dictation into notes.",
+        "NSSpeechRecognitionUsageDescription": "Writer's Helper transcribes your voice on-device to capture your story ideas as notes."
       }
     },
     "android": {
@@ -23,8 +23,8 @@
       [
         "expo-speech-recognition",
         {
-          "microphonePermission": "Scribeverse uses your microphone to transcribe your dictation into notes.",
-          "speechRecognitionPermission": "Scribeverse transcribes your voice on-device to capture your story ideas as notes."
+          "microphonePermission": "Writer's Helper uses your microphone to transcribe your dictation into notes.",
+          "speechRecognitionPermission": "Writer's Helper transcribes your voice on-device to capture your story ideas as notes."
         }
       ]
     ],

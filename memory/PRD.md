@@ -1,4 +1,4 @@
-# Scribeverse — Product Requirements & Progress
+# Writer's Helper — Product Requirements & Progress
 
 ## Original problem statement
 > Build an app that takes dictation for a given writing project and stores notes locally. Each project can be created and the characters added per project. Notes can be associated with particular characters, chapters or acts in the story. The notes can be exported as TEXT files.

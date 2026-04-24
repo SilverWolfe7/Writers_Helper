@@ -25,7 +25,7 @@ export default function LoginScreen({ navigation }) {
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-          <Overline>Scribeverse</Overline>
+            <Overline>Writer&apos;s Helper</Overline>
           <H1 style={{ marginTop: 8, marginBottom: 32 }}>The page is waiting.</H1>
 
           <Overline>Email</Overline>

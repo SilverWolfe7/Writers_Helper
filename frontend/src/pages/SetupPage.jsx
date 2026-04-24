@@ -93,12 +93,12 @@ export default function SetupPage() {
 
         <div className="overline mb-3">Step 01 · Permissions</div>
         <h1 className="font-serif text-4xl md:text-5xl tracking-tight mb-4">
-          Grant Scribeverse access to your microphone.
+          Grant Writer&apos;s Helper access to your microphone.
         </h1>
         <p className="text-muted2 max-w-xl leading-relaxed mb-12">
-          Scribeverse uses your browser's microphone and the Web Speech API to transcribe your dictation into
+          Writer&apos;s Helper uses your browser&apos;s microphone and the Web Speech API to transcribe your dictation into
           written notes. Audio is processed by your browser — only the transcript you choose to save is sent to
-          your Scribeverse account.
+          your Writer&apos;s Helper account.
         </p>
 
         <div
@@ -188,7 +188,7 @@ export default function SetupPage() {
           <BulletRow
             icon={<AlertTriangle className="w-4 h-4" />}
             title="What's NOT collected"
-            body="No raw audio is uploaded to Scribeverse. Only the transcript you choose to save is stored in your account."
+            body="No raw audio is uploaded to Writer's Helper. Only the transcript you choose to save is stored in your account."
           />
         </div>
       </main>

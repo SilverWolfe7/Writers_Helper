@@ -22,7 +22,7 @@ export default function AppHeader() {
           <span className="inline-flex items-center justify-center w-8 h-8 border border-ink">
             <Feather className="w-4 h-4 text-ink" />
           </span>
-          <span className="font-serif text-xl tracking-tight">Scribeverse</span>
+          <span className="font-serif text-xl tracking-tight">Writer&apos;s Helper</span>
         </Link>
         <div className="flex items-center gap-6">
           {user && user !== false && (

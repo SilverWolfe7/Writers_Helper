@@ -203,7 +203,7 @@ export default function DictatePage() {
           {project ? project.title : "Loading…"}
         </h1>
         <p className="text-muted2 text-sm mb-12 max-w-xl">
-          Tap the microphone and start speaking. Scribeverse transcribes live — pause, edit, tag, and save.
+          Tap the microphone and start speaking. Writer&apos;s Helper transcribes live — pause, edit, tag, and save.
         </p>
 
         {!supported && (

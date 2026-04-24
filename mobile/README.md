@@ -1,6 +1,6 @@
-# Scribeverse — iPhone app (Expo / React Native)
+# Writer's Helper — iPhone app (Expo / React Native)
 
-A native iPhone version of Scribeverse that talks to the same backend as the web app.
+A native iPhone version of Writer's Helper that talks to the same backend as the web app.
 
 ## Stack
 - Expo SDK 52 + React Native 0.76 + React Navigation
@@ -33,10 +33,10 @@ Scan the QR with your iPhone camera → opens in Expo Go. You'll get the full ap
 npx expo prebuild
 npx expo run:ios
 ```
-This builds a Scribeverse dev client that includes the `expo-speech-recognition` native module. Voice dictation will then work on-device using Apple's Speech framework.
+This builds a Writer's Helper dev client that includes the `expo-speech-recognition` native module. Voice dictation will then work on-device using Apple's Speech framework.
 
 ## Backend URL
-Configured in `app.json → expo.extra.backendUrl`. Defaults to the deployed Scribeverse preview URL. Override by editing that single value.
+Configured in `app.json → expo.extra.backendUrl`. Defaults to the deployed Writer's Helper preview URL. Override by editing that single value.
 
 ## Test credentials
 Same as web (see `/app/memory/test_credentials.md`):

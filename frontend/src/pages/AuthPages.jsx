@@ -17,7 +17,7 @@ function AuthShell({ title, overline, children }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-parchment/70 via-transparent to-transparent" />
         <div className="absolute bottom-10 left-10 right-10 text-ink">
-          <div className="overline mb-3">Scribeverse · A writer's dictation studio</div>
+          <div className="overline mb-3">Writer&apos;s Helper · A writer&apos;s dictation studio</div>
           <p className="font-serif text-3xl leading-snug max-w-md">
             "The first draft is just you telling yourself the story."
           </p>
@@ -30,7 +30,7 @@ function AuthShell({ title, overline, children }) {
             <span className="inline-flex items-center justify-center w-8 h-8 border border-ink">
               <Feather className="w-4 h-4" />
             </span>
-            <span className="font-serif text-xl">Scribeverse</span>
+            <span className="font-serif text-xl">Writer&apos;s Helper</span>
           </div>
           <div className="overline mb-4">{overline}</div>
           <h1 className="font-serif text-4xl md:text-5xl tracking-tight mb-10">{title}</h1>
@@ -60,8 +60,7 @@ export function LoginPage() {
     <AuthShell overline="Welcome back" title="The page is waiting.">
       <form onSubmit={onSubmit} className="space-y-6" data-testid="login-form">
         <div>
-          <label className="overline block mb-2">Email</label>
-          <input
+          <label className="overline block mb-2">Email</label>          <input
             type="email"
             required
             value={email}

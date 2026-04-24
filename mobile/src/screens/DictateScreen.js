@@ -125,7 +125,7 @@ export default function DictateScreen({ route, navigation }) {
     if (!SpeechRecognition) {
       Alert.alert(
         "Voice dictation unavailable",
-        "Voice dictation needs a Scribeverse dev build (native module). You can type your note in the transcript field below."
+        "Voice dictation needs a Writer's Helper dev build (native module). You can type your note in the transcript field below."
       );
       return;
     }
@@ -212,7 +212,7 @@ export default function DictateScreen({ route, navigation }) {
         {!supported && (
           <View style={styles.warn}>
             <Text style={styles.warnText}>
-              Voice dictation is only available in a Scribeverse dev build. In Expo Go, type your note in the
+              Voice dictation is only available in a Writer&apos;s Helper dev build. In Expo Go, type your note in the
               transcript field below — it still saves to your project with full tagging.
             </Text>
           </View>
