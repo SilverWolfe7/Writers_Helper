@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Feather, LogOut, Settings } from "lucide-react";
+import MicStatusIndicator from "./MicStatusIndicator";
 
 export default function AppHeader() {
   const { user, logout } = useAuth();
@@ -33,6 +34,7 @@ export default function AppHeader() {
               >
                 {user.email}
               </span>
+              <MicStatusIndicator />
               <Link
                 to="/setup"
                 className="inline-flex items-center gap-2 text-sm text-ink hover:text-rust transition-colors"
