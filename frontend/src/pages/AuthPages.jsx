@@ -57,7 +57,7 @@ export function LoginPage() {
   };
 
   return (
-    <AuthShell overline="Welcome back" title="Return to the page.">
+    <AuthShell overline="Welcome back" title="The page is waiting.">
       <form onSubmit={onSubmit} className="space-y-6" data-testid="login-form">
         <div>
           <label className="overline block mb-2">Email</label>

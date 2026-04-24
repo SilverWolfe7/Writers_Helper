@@ -26,7 +26,11 @@ export default function AppHeader() {
         <div className="flex items-center gap-6">
           {user && user !== false && (
             <>
-              <span className="overline hidden sm:inline" data-testid="header-user-email">
+              <span
+                className="overline hidden sm:inline max-w-[200px] truncate"
+                data-testid="header-user-email"
+                title={user.email}
+              >
                 {user.email}
               </span>
               <button
