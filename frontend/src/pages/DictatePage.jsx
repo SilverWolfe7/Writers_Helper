@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { api, formatApiError } from "../lib/api";
 import AppHeader from "../components/AppHeader";
-import { Mic, Square, Save, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Mic, Square, Save, ArrowLeft, CheckCircle2, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 export default function DictatePage() {
@@ -17,6 +17,7 @@ export default function DictatePage() {
   const [interim, setInterim] = useState("");
   const [recording, setRecording] = useState(false);
   const [supported, setSupported] = useState(true);
+  const [micPermission, setMicPermission] = useState("unknown"); // granted | prompt | denied | unknown
   const [title, setTitle] = useState("Untitled dictation");
   const [characterIds, setCharacterIds] = useState([]);
   const [chapterId, setChapterId] = useState("");
@@ -89,6 +90,7 @@ export default function DictatePage() {
     rec.onerror = (e) => {
       if (e.error === "not-allowed" || e.error === "service-not-allowed") {
         toast.error("Microphone access was denied.");
+        setMicPermission("denied");
         shouldRestartRef.current = false;
         setRecording(false);
       }
@@ -104,21 +106,54 @@ export default function DictatePage() {
     };
   }, []);
 
-  const toggleRecord = () => {
+  // Track microphone permission live (granted/prompt/denied).
+  useEffect(() => {
+    let permRef = null;
+    let cancelled = false;
+    (async () => {
+      if (!navigator.permissions?.query) return;
+      try {
+        permRef = await navigator.permissions.query({ name: "microphone" });
+        if (cancelled) return;
+        setMicPermission(permRef.state);
+        permRef.onchange = () => setMicPermission(permRef.state);
+      } catch {
+        /* older browsers */
+      }
+    })();
+    return () => {
+      cancelled = true;
+      if (permRef) permRef.onchange = null;
+    };
+  }, []);
+
+  const toggleRecord = async () => {
     const rec = recognitionRef.current;
     if (!rec) return;
     if (recording) {
       shouldRestartRef.current = false;
       rec.stop();
-    } else {
-      baseTranscriptRef.current = transcript ? transcript.trim() : "";
-      shouldRestartRef.current = true;
+      return;
+    }
+    // Proactively ask for mic access if we know it's not granted yet.
+    if (micPermission !== "granted" && navigator.mediaDevices?.getUserMedia) {
       try {
-        rec.start();
-        setRecording(true);
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach((t) => t.stop());
+        setMicPermission("granted");
       } catch {
-        /* already started */
+        setMicPermission("denied");
+        toast.error("Microphone access denied. Open Setup to fix.");
+        return;
       }
+    }
+    baseTranscriptRef.current = transcript ? transcript.trim() : "";
+    shouldRestartRef.current = true;
+    try {
+      rec.start();
+      setRecording(true);
+    } catch {
+      /* already started */
     }
   };
 
@@ -176,6 +211,38 @@ export default function DictatePage() {
             Your browser does not support voice dictation. Use Chrome, Edge, or Safari — or type your note directly below.
           </div>
         )}
+
+        <Link
+          to="/setup"
+          className={`flex items-center gap-3 border px-4 py-3 mb-8 transition-colors ${
+            !supported
+              ? "border-rule bg-parchment-2 text-muted2"
+              : micPermission === "granted"
+              ? "border-moss bg-moss/10 text-ink hover:bg-moss/15"
+              : "border-sand bg-sand/10 text-ink hover:bg-sand/15"
+          }`}
+          data-testid="mic-trust-badge"
+        >
+          <span
+            className={`inline-block w-2 h-2 rounded-full ${
+              !supported
+                ? "bg-muted2"
+                : micPermission === "granted"
+                ? "bg-moss"
+                : "bg-sand"
+            }`}
+          />
+          <span className="font-mono uppercase text-[11px] tracking-[0.2em] flex-1">
+            {!supported
+              ? "Typing only · voice dictation unsupported in this browser"
+              : micPermission === "granted"
+              ? "Mic: browser speech · private"
+              : micPermission === "denied"
+              ? "Mic blocked — tap to fix"
+              : "Mic not yet granted — tap to set up"}
+          </span>
+          <ChevronRight className="w-4 h-4 opacity-60" />
+        </Link>
 
         <div className="border border-rule bg-parchment-2 p-6 md:p-10">
           <div className="flex items-center justify-between mb-6">

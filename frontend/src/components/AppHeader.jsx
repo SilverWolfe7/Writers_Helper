@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Feather, LogOut } from "lucide-react";
+import { Feather, LogOut, Settings } from "lucide-react";
 
 export default function AppHeader() {
   const { user, logout } = useAuth();
@@ -33,6 +33,13 @@ export default function AppHeader() {
               >
                 {user.email}
               </span>
+              <Link
+                to="/setup"
+                className="inline-flex items-center gap-2 text-sm text-ink hover:text-rust transition-colors"
+                data-testid="header-setup-link"
+              >
+                <Settings className="w-4 h-4" /> Setup
+              </Link>
               <button
                 onClick={doLogout}
                 className="inline-flex items-center gap-2 text-sm text-ink hover:text-rust transition-colors"

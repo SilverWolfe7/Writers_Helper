@@ -7,6 +7,7 @@ import { LoginPage, RegisterPage } from "./pages/AuthPages";
 import DashboardPage from "./pages/DashboardPage";
 import ProjectPage from "./pages/ProjectPage";
 import DictatePage from "./pages/DictatePage";
+import SetupPage from "./pages/SetupPage";
 
 function App() {
   return (
@@ -38,6 +39,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <DictatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/setup"
+              element={
+                <ProtectedRoute>
+                  <SetupPage />
                 </ProtectedRoute>
               }
             />
