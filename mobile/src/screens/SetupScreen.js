@@ -4,13 +4,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme";
 import { H1, H2, Overline, Muted, PrimaryButton, OutlineButton, Card } from "../ui";
 
-// Optional native module — absent in Expo Go.
+// Optional native module — absent in Expo Go / web.
 let SpeechRecognition = null;
-try {
-  const mod = require("expo-speech-recognition");
-  SpeechRecognition = mod.ExpoSpeechRecognitionModule;
-} catch {
-  /* Expo Go: fall back to manual mode */
+if (Platform.OS !== "web") {
+  try {
+    const mod = require("expo-speech-recognition");
+    SpeechRecognition = mod.ExpoSpeechRecognitionModule;
+  } catch {
+    /* Expo Go or web: fall back to manual mode */
+  }
 }
 
 const STATE = {

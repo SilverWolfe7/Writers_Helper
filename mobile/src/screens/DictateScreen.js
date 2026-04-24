@@ -6,16 +6,18 @@ import { api, formatApiError } from "../api";
 import { colors } from "../theme";
 import { H1, H2, Overline, Muted, PrimaryButton, OutlineButton, Tag } from "../ui";
 
-// Speech recognition is optional — only available in a dev build. In Expo Go
-// the native module is absent, so we gracefully fall back to manual typing.
+// Speech recognition is optional — only available in a native dev build. In
+// Expo Go or web, the native module throws when used, so we guard by platform.
 let SpeechRecognition = null;
 let addSpeechListener = null;
-try {
-  const mod = require("expo-speech-recognition");
-  SpeechRecognition = mod.ExpoSpeechRecognitionModule;
-  addSpeechListener = mod.addSpeechRecognitionListener;
-} catch {
-  /* dev build not required for manual mode */
+if (Platform.OS !== "web") {
+  try {
+    const mod = require("expo-speech-recognition");
+    SpeechRecognition = mod.ExpoSpeechRecognitionModule;
+    addSpeechListener = mod.addSpeechRecognitionListener;
+  } catch {
+    /* dev build not required for manual mode */
+  }
 }
 
 export default function DictateScreen({ route, navigation }) {
