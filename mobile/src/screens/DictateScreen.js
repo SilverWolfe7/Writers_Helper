@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable, Alert, TextInput, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import { api, formatApiError } from "../api";
 import { colors } from "../theme";
 import { H1, H2, Overline, Muted, PrimaryButton, OutlineButton, Tag } from "../ui";
@@ -35,6 +36,26 @@ export default function DictateScreen({ route, navigation }) {
 
   const baseRef = useRef("");
   const supported = !!SpeechRecognition;
+  const [micGranted, setMicGranted] = useState(false);
+
+  const refreshMicState = useCallback(async () => {
+    if (!SpeechRecognition) {
+      setMicGranted(false);
+      return;
+    }
+    try {
+      const perm = await SpeechRecognition.getPermissionsAsync();
+      setMicGranted(!!perm?.granted);
+    } catch {
+      setMicGranted(false);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      refreshMicState();
+    }, [refreshMicState])
+  );
 
   useEffect(() => {
     (async () => {
@@ -197,11 +218,33 @@ export default function DictateScreen({ route, navigation }) {
           </View>
         )}
 
-        {supported && (
-          <Pressable onPress={() => navigation.navigate("Setup")} style={styles.setupLink} testID="dictate-open-setup">
-            <Text style={styles.setupLinkText}>Microphone setup & permissions →</Text>
-          </Pressable>
-        )}
+        <Pressable
+          onPress={() => navigation.navigate("Setup")}
+          testID="mic-trust-badge"
+          style={({ pressed }) => [
+            styles.badge,
+            !supported && styles.badgeMuted,
+            supported && !micGranted && styles.badgeWarn,
+            pressed && { opacity: 0.7 },
+          ]}
+        >
+          <View
+            style={[
+              styles.badgeDot,
+              supported && micGranted && { backgroundColor: colors.moss },
+              supported && !micGranted && { backgroundColor: colors.sand },
+              !supported && { backgroundColor: colors.muted },
+            ]}
+          />
+          <Text style={styles.badgeLabel}>
+            {!supported
+              ? "Typing only · dictation unavailable in Expo Go"
+              : micGranted
+              ? "Mic: on-device · private"
+              : "Mic not yet granted — tap to set up"}
+          </Text>
+          <Text style={styles.badgeArrow}>›</Text>
+        </Pressable>
 
         <View style={styles.canvas}>
           <Overline>Live transcript</Overline>
@@ -347,6 +390,37 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   warnText: { color: colors.ink, fontSize: 13, lineHeight: 18 },
-  setupLink: { paddingVertical: 8, marginBottom: 12 },
-  setupLinkText: { color: colors.ink, fontSize: 13, textDecorationLine: "underline" },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.moss,
+    backgroundColor: "#EEF2EE",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 16,
+  },
+  badgeWarn: {
+    borderColor: colors.sand,
+    backgroundColor: "#FBF2E4",
+  },
+  badgeMuted: {
+    borderColor: colors.rule,
+    backgroundColor: colors.parchment2,
+  },
+  badgeDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.moss,
+    marginRight: 10,
+  },
+  badgeLabel: {
+    flex: 1,
+    color: colors.ink,
+    fontFamily: "Menlo",
+    fontSize: 11,
+    letterSpacing: 1.5,
+  },
+  badgeArrow: { color: colors.muted, fontSize: 18, marginLeft: 6 },
 });
