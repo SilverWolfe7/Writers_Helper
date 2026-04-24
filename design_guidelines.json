@@ -1,0 +1,90 @@
+{
+  "theme": "light",
+  "archetype": "Organic & Earthy (Editorial Variant)",
+  "colors": {
+    "background": "#FAF9F5",
+    "surface": "#F2EFEB",
+    "primary": "#1C1B19",
+    "secondary": "#E3DFD8",
+    "accent": "#B45341",
+    "text_primary": "#1C1B19",
+    "text_secondary": "#5C5A56",
+    "border": "#E3DFD8",
+    "success": "#748A76",
+    "warning": "#D4A373",
+    "error": "#B45341"
+  },
+  "typography": {
+    "heading_font": "Playfair Display",
+    "body_font": "IBM Plex Sans",
+    "mono_font": "IBM Plex Mono",
+    "rules": [
+      "H1 must not exceed text-5xl, use tracking-tight.",
+      "Never use Inter, Roboto, or standard sans-serif for headings.",
+      "Overlines, metadata, and tags must use IBM Plex Mono, uppercase, text-xs, tracking-[0.2em].",
+      "Body text should use leading-relaxed for reading comfort and text-lg or text-xl in the dictation canvas."
+    ]
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous Spacing, Distraction-Free",
+    "rules": [
+      "Containers with borders must have generous internal padding (p-6 or p-8) to avoid collision.",
+      "Hero dictation screen must have a constrained max-width (max-w-3xl) and massive vertical margins (py-24 mx-auto) to focus the writer.",
+      "Dashboard uses a grid-cols-1 md:grid-cols-3 or 4 layout with gap-6.",
+      "Optical alignment is critical: Left-align paragraphs, forms, and dense content."
+    ]
+  },
+  "surface_strategy": {
+    "style": "Flat, Paper-like",
+    "rules": [
+      "Avoid glassmorphism completely. Use flat solid backgrounds to evoke a physical paper and ink feel.",
+      "Cards and containers should have flat borders (1px solid border-[#E3DFD8]) and zero box-shadow.",
+      "Max border-radius is rounded-sm (2px to 4px). Sharp edges (rounded-none) are heavily preferred to mimic paper.",
+      "Header must have a solid background (bg-[#FAF9F5]) and a hard 1px bottom border."
+    ]
+  },
+  "components": {
+    "strategy": "Shadcn/UI customized for editorial look",
+    "rules": [
+      "Buttons: Flat, text color white on dark background (bg-[#1C1B19]), hover state bg-[#383632] hover:text-white.",
+      "Inputs/Textareas: bg-transparent, border-b only or subtle full border, rounded-none.",
+      "Modals: Flat, sharp corners, backdrop uses a solid dark scrim (bg-black/60) with no blur.",
+      "Tags/Pills: Flat background (bg-[#F2EFEB]), small monospace font, subtle border."
+    ]
+  },
+  "motion": {
+    "rules": [
+      "Hover states must transition color/opacity smoothly (transition-colors duration-200).",
+      "Use smooth fade-ins for dictation transcript reveals.",
+      "Keep animations functional. Use a subtle pulse animation for the active recording/dictation indicator."
+    ]
+  },
+  "media_and_assets": {
+    "icons_library": "lucide-react",
+    "images": [
+      {
+        "category": "auth_hero",
+        "url": "https://images.unsplash.com/photo-1570626742839-59acd9822944?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODR8MHwxfHNlYXJjaHwyfHx3cml0ZXIlMjBkZXNrJTIwbm90ZWJvb2slMjB2aW50YWdlfGVufDB8fHx8MTc3NzA1OTU1NHww&ixlib=rb-4.1.0&q=85",
+        "description": "Vintage typewriter on a desk for the login/signup split screen."
+      },
+      {
+        "category": "texture_background",
+        "url": "https://images.unsplash.com/photo-1737276746515-19ea864a6b80?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwcGFwZXIlMjB0ZXh0dXJlfGVufDB8fHx8MTc3NzA1OTU1NHww&ixlib=rb-4.1.0&q=85",
+        "description": "Subtle paper texture to be used at very low opacity on the dictation canvas or dashboard background if needed."
+      }
+    ]
+  },
+  "testing": {
+    "rules": [
+      "All interactive elements MUST include data-testid attribute in kebab-case (e.g., data-testid='record-button')."
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the color palette to maintain the literary, paper-like aesthetic.",
+    "The dictation interface is the core feature. Ensure it is distraction-free, visually distinct, and centers the text beautifully using the specified typography.",
+    "Customize all Shadcn components to remove the default rounded corners and soft shadows (the Vercel-look). Use sharp edges and flat borders.",
+    "Do not use placeholder text for logos or images. Only use the provided media URLs.",
+    "Implement the writing interface as a 'Hero' experience: large legible text, plenty of breathing room, and a clear minimal visual hierarchy.",
+    "All .js files must adhere to this design system. Overwrite Shadcn default tailwind config with the colors and fonts provided."
+  ]
+}
