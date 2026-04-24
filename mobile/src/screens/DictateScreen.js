@@ -120,7 +120,14 @@ export default function DictateScreen({ route, navigation }) {
     try {
       const perm = await SpeechRecognition.requestPermissionsAsync();
       if (!perm.granted) {
-        Alert.alert("Permission needed", "Please allow microphone and speech recognition access.");
+        Alert.alert(
+          "Microphone access needed",
+          "Open Setup to grant microphone and speech recognition access.",
+          [
+            { text: "Not now", style: "cancel" },
+            { text: "Open Setup", onPress: () => navigation.navigate("Setup") },
+          ]
+        );
         return;
       }
       baseRef.current = transcript.trim();
@@ -188,6 +195,12 @@ export default function DictateScreen({ route, navigation }) {
               transcript field below — it still saves to your project with full tagging.
             </Text>
           </View>
+        )}
+
+        {supported && (
+          <Pressable onPress={() => navigation.navigate("Setup")} style={styles.setupLink} testID="dictate-open-setup">
+            <Text style={styles.setupLinkText}>Microphone setup & permissions →</Text>
+          </Pressable>
         )}
 
         <View style={styles.canvas}>
@@ -334,4 +347,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   warnText: { color: colors.ink, fontSize: 13, lineHeight: 18 },
+  setupLink: { paddingVertical: 8, marginBottom: 12 },
+  setupLinkText: { color: colors.ink, fontSize: 13, textDecorationLine: "underline" },
 });

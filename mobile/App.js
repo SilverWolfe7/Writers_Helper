@@ -13,6 +13,7 @@ import ProjectsScreen from "./src/screens/ProjectsScreen";
 import ProjectScreen from "./src/screens/ProjectScreen";
 import DictateScreen from "./src/screens/DictateScreen";
 import NoteEditorScreen from "./src/screens/NoteEditorScreen";
+import SetupScreen from "./src/screens/SetupScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,7 @@ function RootNav() {
             <Stack.Screen name="Project" component={ProjectScreen} />
             <Stack.Screen name="Dictate" component={DictateScreen} />
             <Stack.Screen name="NoteEditor" component={NoteEditorScreen} />
+            <Stack.Screen name="Setup" component={SetupScreen} />
           </>
         ) : (
           <>

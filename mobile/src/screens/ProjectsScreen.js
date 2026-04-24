@@ -63,9 +63,14 @@ export default function ProjectsScreen({ navigation }) {
           <Overline>Scribeverse</Overline>
           <Text style={styles.brand}>Your writing desk</Text>
         </View>
-        <Pressable onPress={confirmLogout} testID="logout-button">
-          <Text style={styles.signOut}>Sign out</Text>
-        </Pressable>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Pressable onPress={() => navigation.navigate("Setup")} testID="open-setup-button">
+            <Text style={styles.signOut}>Setup</Text>
+          </Pressable>
+          <Pressable onPress={confirmLogout} testID="logout-button">
+            <Text style={[styles.signOut, { marginLeft: 16 }]}>Sign out</Text>
+          </Pressable>
+        </View>
       </View>
 
       <ScrollView
