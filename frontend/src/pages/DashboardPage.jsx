@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, formatApiError } from "../lib/api";
 import AppHeader from "../components/AppHeader";
@@ -13,7 +13,7 @@ export default function DashboardPage() {
   const [genre, setGenre] = useState("");
   const [description, setDescription] = useState("");
 
-  const load = async () => {
+  const load = useCallback(async () => {
     try {
       const { data } = await api.get("/projects");
       setProjects(data);
@@ -22,10 +22,11 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const create = async (e) => {
     e.preventDefault();
@@ -134,53 +135,59 @@ export default function DashboardPage() {
           </form>
         )}
 
-        {loading ? (
-          <div className="overline">Loading projects…</div>
-        ) : projects.length === 0 ? (
+        {loading && <div className="overline">Loading projects…</div>}
+        {!loading && projects.length === 0 && (
           <div className="border border-rule p-14 text-center" data-testid="empty-projects">
             <BookOpen className="w-6 h-6 mx-auto text-muted2" />
             <p className="font-serif text-2xl mt-4">No projects yet.</p>
             <p className="text-muted2 mt-2 text-sm">Start a project above to begin dictating notes.</p>
           </div>
-        ) : (
+        )}
+        {!loading && projects.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="projects-grid">
             {projects.map((p) => (
-              <div
-                key={p.id}
-                className="group border border-rule bg-parchment-2 p-6 flex flex-col justify-between min-h-[200px]"
-                data-testid={`project-card-${p.id}`}
-              >
-                <div>
-                  <div className="overline text-rust mb-3">{p.genre || "Project"}</div>
-                  <Link to={`/projects/${p.id}`} className="font-serif text-2xl tracking-tight hover:text-rust transition-colors">
-                    {p.title}
-                  </Link>
-                  {p.description && (
-                    <p className="text-sm text-muted2 mt-3 leading-relaxed line-clamp-3">{p.description}</p>
-                  )}
-                </div>
-                <div className="mt-6 flex items-center justify-between">
-                  <Link
-                    to={`/projects/${p.id}/dictate`}
-                    className="inline-flex items-center gap-2 text-sm hover:text-rust transition-colors"
-                    data-testid={`project-dictate-${p.id}`}
-                  >
-                    <Mic className="w-4 h-4" /> Dictate
-                  </Link>
-                  <button
-                    onClick={() => del(p.id)}
-                    className="text-muted2 hover:text-rust transition-colors"
-                    aria-label="Delete project"
-                    data-testid={`project-delete-${p.id}`}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+              <ProjectCard key={p.id} project={p} onDelete={del} />
             ))}
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+function ProjectCard({ project, onDelete }) {
+  const p = project;
+  return (
+    <div
+      className="group border border-rule bg-parchment-2 p-6 flex flex-col justify-between min-h-[200px]"
+      data-testid={`project-card-${p.id}`}
+    >
+      <div>
+        <div className="overline text-rust mb-3">{p.genre || "Project"}</div>
+        <Link to={`/projects/${p.id}`} className="font-serif text-2xl tracking-tight hover:text-rust transition-colors">
+          {p.title}
+        </Link>
+        {p.description && (
+          <p className="text-sm text-muted2 mt-3 leading-relaxed line-clamp-3">{p.description}</p>
+        )}
+      </div>
+      <div className="mt-6 flex items-center justify-between">
+        <Link
+          to={`/projects/${p.id}/dictate`}
+          className="inline-flex items-center gap-2 text-sm hover:text-rust transition-colors"
+          data-testid={`project-dictate-${p.id}`}
+        >
+          <Mic className="w-4 h-4" /> Dictate
+        </Link>
+        <button
+          onClick={() => onDelete(p.id)}
+          className="text-muted2 hover:text-rust transition-colors"
+          aria-label="Delete project"
+          data-testid={`project-delete-${p.id}`}
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 }

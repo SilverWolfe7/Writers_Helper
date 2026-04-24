@@ -1,83 +1,37 @@
-import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AppHeader from "../components/AppHeader";
 import { Mic, Shield, CheckCircle2, AlertTriangle, ArrowLeft } from "lucide-react";
-
-const STATE = {
-  UNKNOWN: "unknown",
-  GRANTED: "granted",
-  PROMPT: "prompt",
-  DENIED: "denied",
-  UNAVAILABLE: "unavailable",
-};
+import useMicPermission, { MIC_STATE } from "../hooks/useMicPermission";
 
 function detectSpeechRecognition() {
   return typeof window !== "undefined" && !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 }
 
+const BANNERS = {
+  [MIC_STATE.UNKNOWN]: { label: "Checking…", tone: "neutral" },
+  [MIC_STATE.GRANTED]: { label: "Microphone access granted", tone: "ok" },
+  [MIC_STATE.PROMPT]: { label: "Access not yet granted", tone: "warn" },
+  [MIC_STATE.DENIED]: { label: "Access blocked in browser settings", tone: "warn" },
+  [MIC_STATE.UNAVAILABLE]: { label: "Microphone API unavailable in this browser", tone: "warn" },
+};
+
+function dotColorFor(tone) {
+  if (tone === "ok") return "bg-moss";
+  if (tone === "warn") return "bg-sand";
+  return "bg-muted2";
+}
+
+function borderColorFor(tone) {
+  if (tone === "ok") return "border-moss";
+  if (tone === "warn") return "border-sand";
+  return "border-rule";
+}
+
 export default function SetupPage() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState(STATE.UNKNOWN);
-  const [requesting, setRequesting] = useState(false);
-  const [error, setError] = useState("");
+  const mic = useMicPermission();
   const speechSupported = detectSpeechRecognition();
-
-  const refresh = useCallback(async () => {
-    setError("");
-    if (!navigator?.mediaDevices?.getUserMedia) {
-      setStatus(STATE.UNAVAILABLE);
-      return;
-    }
-    try {
-      if (navigator.permissions?.query) {
-        const p = await navigator.permissions.query({ name: "microphone" });
-        setStatus(p.state === "granted" ? STATE.GRANTED : p.state === "denied" ? STATE.DENIED : STATE.PROMPT);
-        p.onchange = () => {
-          setStatus(p.state === "granted" ? STATE.GRANTED : p.state === "denied" ? STATE.DENIED : STATE.PROMPT);
-        };
-      } else {
-        setStatus(STATE.PROMPT);
-      }
-    } catch {
-      setStatus(STATE.PROMPT);
-    }
-  }, []);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  const requestAccess = async () => {
-    setError("");
-    setRequesting(true);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach((t) => t.stop());
-      setStatus(STATE.GRANTED);
-    } catch (e) {
-      if (e?.name === "NotAllowedError") {
-        setStatus(STATE.DENIED);
-        setError(
-          "Your browser blocked the microphone. Click the lock/info icon next to the address bar and allow microphone access."
-        );
-      } else {
-        setError(e?.message || "Could not access the microphone.");
-      }
-    } finally {
-      setRequesting(false);
-    }
-  };
-
-  const banner = {
-    [STATE.UNKNOWN]: { label: "Checking…", tone: "neutral" },
-    [STATE.GRANTED]: { label: "Microphone access granted", tone: "ok" },
-    [STATE.PROMPT]: { label: "Access not yet granted", tone: "warn" },
-    [STATE.DENIED]: { label: "Access blocked in browser settings", tone: "warn" },
-    [STATE.UNAVAILABLE]: { label: "Microphone API unavailable in this browser", tone: "warn" },
-  }[status];
-
-  const dotColor =
-    banner.tone === "ok" ? "bg-moss" : banner.tone === "warn" ? "bg-sand" : "bg-muted2";
+  const banner = BANNERS[mic.state] || BANNERS[MIC_STATE.UNKNOWN];
 
   return (
     <div className="min-h-screen bg-parchment">
@@ -101,79 +55,13 @@ export default function SetupPage() {
           your Writer&apos;s Helper account.
         </p>
 
-        <div
-          className={`border p-6 md:p-8 bg-parchment-2 mb-8 ${
-            banner.tone === "ok" ? "border-moss" : banner.tone === "warn" ? "border-sand" : "border-rule"
-          }`}
-          data-testid="setup-status-card"
-        >
-          <div className="flex items-center gap-3">
-            <span className={`inline-block w-2.5 h-2.5 rounded-full ${dotColor}`} />
-            <span className="text-base text-ink" data-testid="setup-status-label">
-              {banner.label}
-            </span>
-          </div>
-          {status === STATE.GRANTED && (
-            <p className="text-sm text-muted2 mt-3 leading-relaxed">
-              You're all set. Open a project and tap Dictate to begin.
-            </p>
-          )}
-          {status === STATE.PROMPT && (
-            <p className="text-sm text-muted2 mt-3 leading-relaxed">
-              Click the button below — your browser will prompt you to allow microphone access.
-            </p>
-          )}
-          {status === STATE.DENIED && (
-            <p className="text-sm text-muted2 mt-3 leading-relaxed">
-              Your browser is blocking the prompt. Open the site permissions (lock icon in the address bar) and
-              set Microphone to Allow, then click Re-check below.
-            </p>
-          )}
-          {status === STATE.UNAVAILABLE && (
-            <p className="text-sm text-muted2 mt-3 leading-relaxed">
-              This browser doesn't expose the microphone API. Try the latest Chrome, Edge, or Safari.
-            </p>
-          )}
-          {!speechSupported && status !== STATE.UNAVAILABLE && (
-            <p className="text-sm text-rust mt-3 leading-relaxed">
-              Note: your browser doesn't support live Web Speech transcription (Firefox). Microphone access will
-              still be granted, but voice-to-text needs Chrome, Edge, or Safari.
-            </p>
-          )}
-          {error && <p className="text-sm text-rust mt-3">{error}</p>}
-        </div>
+        <StatusCard banner={banner} mic={mic} speechSupported={speechSupported} />
 
         <div className="flex flex-wrap gap-3 mb-16">
-          {status === STATE.GRANTED ? (
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 bg-ink text-parchment px-5 py-3 text-sm hover:bg-[#383632] transition-colors"
-              data-testid="setup-done-button"
-            >
-              <CheckCircle2 className="w-4 h-4" /> Back to projects
-            </Link>
-          ) : (
-            <>
-              <button
-                onClick={requestAccess}
-                disabled={requesting || status === STATE.UNAVAILABLE}
-                className="inline-flex items-center gap-2 bg-ink text-parchment px-5 py-3 text-sm hover:bg-[#383632] transition-colors disabled:opacity-50"
-                data-testid="setup-grant-button"
-              >
-                <Mic className="w-4 h-4" /> {requesting ? "Requesting…" : "Grant microphone access"}
-              </button>
-              <button
-                onClick={refresh}
-                className="inline-flex items-center gap-2 border border-ink px-5 py-3 text-sm hover:bg-ink hover:text-parchment transition-colors"
-                data-testid="setup-recheck-button"
-              >
-                Re-check
-              </button>
-            </>
-          )}
+          <ActionButtons mic={mic} />
         </div>
 
-        <div className="overline mb-4">What you're allowing</div>
+        <div className="overline mb-4">What you&apos;re allowing</div>
         <div className="grid gap-5">
           <BulletRow
             icon={<Mic className="w-4 h-4" />}
@@ -193,6 +81,98 @@ export default function SetupPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+function StatusCard({ banner, mic, speechSupported }) {
+  const dot = dotColorFor(banner.tone);
+  const border = borderColorFor(banner.tone);
+  return (
+    <div
+      className={`border p-6 md:p-8 bg-parchment-2 mb-8 ${border}`}
+      data-testid="setup-status-card"
+    >
+      <div className="flex items-center gap-3">
+        <span className={`inline-block w-2.5 h-2.5 rounded-full ${dot}`} />
+        <span className="text-base text-ink" data-testid="setup-status-label">
+          {banner.label}
+        </span>
+      </div>
+      <StatusHint state={mic.state} />
+      {!speechSupported && mic.state !== MIC_STATE.UNAVAILABLE && (
+        <p className="text-sm text-rust mt-3 leading-relaxed">
+          Note: your browser doesn&apos;t support live Web Speech transcription (Firefox). Microphone access will
+          still be granted, but voice-to-text needs Chrome, Edge, or Safari.
+        </p>
+      )}
+      {mic.error && <p className="text-sm text-rust mt-3">{mic.error}</p>}
+    </div>
+  );
+}
+
+function StatusHint({ state }) {
+  if (state === MIC_STATE.GRANTED) {
+    return (
+      <p className="text-sm text-muted2 mt-3 leading-relaxed">
+        You&apos;re all set. Open a project and tap Dictate to begin.
+      </p>
+    );
+  }
+  if (state === MIC_STATE.PROMPT) {
+    return (
+      <p className="text-sm text-muted2 mt-3 leading-relaxed">
+        Click the button below — your browser will prompt you to allow microphone access.
+      </p>
+    );
+  }
+  if (state === MIC_STATE.DENIED) {
+    return (
+      <p className="text-sm text-muted2 mt-3 leading-relaxed">
+        Your browser is blocking the prompt. Open the site permissions (lock icon in the address bar) and
+        set Microphone to Allow, then click Re-check below.
+      </p>
+    );
+  }
+  if (state === MIC_STATE.UNAVAILABLE) {
+    return (
+      <p className="text-sm text-muted2 mt-3 leading-relaxed">
+        This browser doesn&apos;t expose the microphone API. Try the latest Chrome, Edge, or Safari.
+      </p>
+    );
+  }
+  return null;
+}
+
+function ActionButtons({ mic }) {
+  if (mic.state === MIC_STATE.GRANTED) {
+    return (
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 bg-ink text-parchment px-5 py-3 text-sm hover:bg-[#383632] transition-colors"
+        data-testid="setup-done-button"
+      >
+        <CheckCircle2 className="w-4 h-4" /> Back to projects
+      </Link>
+    );
+  }
+  return (
+    <>
+      <button
+        onClick={mic.request}
+        disabled={mic.state === MIC_STATE.UNAVAILABLE}
+        className="inline-flex items-center gap-2 bg-ink text-parchment px-5 py-3 text-sm hover:bg-[#383632] transition-colors disabled:opacity-50"
+        data-testid="setup-grant-button"
+      >
+        <Mic className="w-4 h-4" /> Grant microphone access
+      </button>
+      <button
+        onClick={mic.refresh}
+        className="inline-flex items-center gap-2 border border-ink px-5 py-3 text-sm hover:bg-ink hover:text-parchment transition-colors"
+        data-testid="setup-recheck-button"
+      >
+        Re-check
+      </button>
+    </>
   );
 }
 

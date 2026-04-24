@@ -426,7 +426,9 @@ function NoteEditor({ note, characters, chapters, acts, projectId, onCancel, onS
           className="bg-ink text-parchment px-5 py-2.5 text-sm hover:bg-[#383632] transition-colors disabled:opacity-60"
           data-testid="note-save-button"
         >
-          {saving ? "Saving…" : note?.id ? "Update note" : "Save note"}
+          {saving && "Saving…"}
+          {!saving && note?.id && "Update note"}
+          {!saving && !note?.id && "Save note"}
         </button>
         <button
           type="button"
