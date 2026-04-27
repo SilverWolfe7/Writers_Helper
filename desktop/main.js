@@ -212,6 +212,14 @@ function configureAutoUpdater() {
 }
 
 function checkForUpdatesManually() {
+  if (process.mas) {
+    dialog.showMessageBox(mainWindow, {
+      type: "info",
+      title: "Updates handled by the App Store",
+      message: "Open the Mac App Store to check for the latest Writer's Helper version.",
+    });
+    return;
+  }
   if (!app.isPackaged) {
     dialog.showMessageBox(mainWindow, {
       type: "info",
@@ -229,7 +237,10 @@ app.whenReady().then(() => {
   buildMenu();
   createWindow();
   configureAutoUpdater();
-  if (app.isPackaged) {
+  // electron-updater is not allowed inside the Mac App Store sandbox — Apple
+  // handles updates through the store. `process.mas` is true only inside MAS
+  // builds, so we run the in-app updater everywhere else.
+  if (app.isPackaged && !process.mas) {
     autoUpdater
       .checkForUpdatesAndNotify()
       .catch((err) => console.error("[updater] startup check failed:", err));

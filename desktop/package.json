@@ -16,9 +16,12 @@
     "package:mac": "electron-builder --mac",
     "package:win": "electron-builder --win",
     "package:linux": "electron-builder --linux",
+    "package:mas": "electron-builder --mac mas",
+    "package:mas-dev": "electron-builder --mac mas-dev",
     "release:mac": "electron-builder --mac --publish always",
     "release:win": "electron-builder --win --publish always",
-    "release:linux": "electron-builder --linux --publish always"
+    "release:linux": "electron-builder --linux --publish always",
+    "release:mas": "electron-builder --mac mas --publish never"
   },
   "build": {
     "appId": "app.writershelper.desktop",
@@ -56,6 +59,26 @@
         "NSMicrophoneUsageDescription": "Writer's Helper uses your microphone to transcribe your dictation into notes.",
         "NSSpeechRecognitionUsageDescription": "Writer's Helper transcribes your voice on-device to capture your story ideas as notes."
       }
+    },
+    "mas": {
+      "category": "public.app-category.productivity",
+      "type": "distribution",
+      "hardenedRuntime": false,
+      "entitlements": "build-assets/entitlements.mas.plist",
+      "entitlementsInherit": "build-assets/entitlements.mas.inherit.plist",
+      "entitlementsLoginHelper": "build-assets/entitlements.mas.loginhelper.plist",
+      "provisioningProfile": "build-assets/embedded.provisionprofile",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Writer's Helper uses your microphone to transcribe your dictation into notes.",
+        "NSSpeechRecognitionUsageDescription": "Writer's Helper transcribes your voice on-device to capture your story ideas as notes.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "masDev": {
+      "type": "development",
+      "provisioningProfile": "build-assets/development.provisionprofile",
+      "entitlements": "build-assets/entitlements.mas.plist",
+      "entitlementsInherit": "build-assets/entitlements.mas.inherit.plist"
     },
     "win": {
       "target": [

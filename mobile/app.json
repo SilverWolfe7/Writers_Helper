@@ -10,7 +10,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.scribeverse.mobile",
+      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
         "NSMicrophoneUsageDescription": "Writer's Helper uses your microphone to transcribe your dictation into notes.",
         "NSSpeechRecognitionUsageDescription": "Writer's Helper transcribes your voice on-device to capture your story ideas as notes."
       }
