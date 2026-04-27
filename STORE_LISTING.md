@@ -210,39 +210,40 @@ Email support@writers-helper.app with feature requests — they go straight into
 
 ---
 
-## 10 · Privacy Policy starter (paste into `/privacy` route)
+## 10 · Canonical Privacy Policy text
+
+> Live at https://voice-notes-writer-1.preview.emergentagent.com/privacy (rendered by `/app/frontend/src/pages/PrivacyPolicyPage.jsx`). Source of truth for both stores. Update the React page if you change anything here.
 
 ```
-Writer's Helper — Privacy Policy
-Effective: 2026-04-01
+Privacy Policy
+Last Updated: April 27, 2026
 
-1. What we collect
-   • Account: your email address and chosen display name.
-   • Content: notes you save (title, body, character/chapter/act tags). All text.
+SilverWolfe Application Development ("we," "us," or "our") operates the Writer's Helper application (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service.
 
-2. What we DO NOT collect
-   • Raw microphone audio. Voice dictation is processed entirely on your device by Apple's Speech framework or your browser's Web Speech API. We never receive the recording.
-   • Tracking identifiers, IDFA, location, contacts, photos, browsing history.
+1. Data Collection and Use
+We believe in user privacy. Because Writer's Helper is a stand-alone application, we do not collect, store, or transmit any personally identifiable information (PII) to external servers.
+  • Personal Data: We do not collect any personal data such as names, email addresses, or phone numbers.
+  • Usage Data: Any data created or stored within the app is saved locally on your device and is not accessible by us.
 
-3. How we use it
-   • Provide and sync the service across your devices.
-   • Reply to support emails when you write to us.
-   We do not sell your data, share it for marketing, or use it to train AI models.
+2. Permissions
+The app may request certain permissions to function correctly (e.g., Microphone). These permissions are used strictly for the app's core functionality:
+  • Microphone: Used to enable voice dictation into text. This data is stored on an authenticated MongoDB database and the data can be downloaded and shared by the user, but the data is NOT publicly available data.
 
-4. Storage and security
-   • Notes are stored in our managed MongoDB cluster, encrypted in transit (TLS) and at rest.
-   • Authentication uses bcrypt-hashed passwords and HTTP-only session cookies (web/desktop) or short-lived JWT tokens (mobile).
+3. Third-Party Services
+We do not use third-party analytics, advertising networks, or tracking software that monitors your activity across other apps or websites.
 
-5. Your rights
-   You can export every note as a plain-text file at any time, and delete your account by emailing support@writers-helper.app. Account deletion removes all your projects and notes within 7 days.
+4. Security
+The security of your data is important to us, but remember that no method of electronic storage is 100% secure. While we rely on the built-in security features of iOS to protect your local data, we encourage you to use device-level security (Passcode, FaceID, or TouchID) to protect your information.
 
-6. Children
-   The service is not directed at children under 13. We do not knowingly collect their data.
+5. Children's Privacy
+Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.
 
-7. Changes
-   We will post any material change to this policy at this URL with at least 30 days' notice.
+6. Changes to This Privacy Policy
+We may update our Privacy Policy from time to time. You are advised to review this page periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
 
-Contact: support@writers-helper.app
+7. Contact Us
+If you have any questions about this Privacy Policy, please contact us:
+By email: lnaeyae@mac.com
 ```
 
 ---
