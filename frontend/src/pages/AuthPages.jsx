@@ -35,6 +35,13 @@ function AuthShell({ title, overline, children }) {
           <div className="overline mb-4">{overline}</div>
           <h1 className="font-serif text-4xl md:text-5xl tracking-tight mb-10">{title}</h1>
           {children}
+          <p className="overline mt-12 pt-6 border-t border-rule" data-testid="auth-privacy-footer">
+            By continuing, you agree to our{" "}
+            <Link to="/privacy" className="ink-link" data-testid="auth-privacy-link">
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>
