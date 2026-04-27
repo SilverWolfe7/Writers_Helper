@@ -2,15 +2,21 @@
 
 Regenerate with:
 ```
-/opt/plugins-venv/bin/python3 /app/scripts/capture_store_screenshots.py
+/opt/plugins-venv/bin/python3 /app/scripts/capture_store_screenshots.py   # desktop
+/opt/plugins-venv/bin/python3 /app/scripts/capture_ios_screenshots.py     # iOS 6.7"
 ```
 
-The script logs in as the seeded `admin@scribeverse.app` user, hides the Emergent preview badge, and captures a 6-shot tour of the "The Hollow Lantern" sample project at two resolutions.
+Both scripts log in as the seeded `admin@scribeverse.app` user, hide the Emergent preview badge, and walk through the "The Hollow Lantern" sample project.
 
 ## Output
 
 | File | Resolution | Target store | Caption (paste into listing) |
 |---|---|---|---|
+| `ios/01-your-writing-desk.png`        | 1290 × 2796 | App Store (iOS 6.7") | YOUR WRITING DESK |
+| `ios/02-project-world.png`            | 1290 × 2796 | App Store (iOS 6.7") | A PROJECT IS A WORLD |
+| `ios/03-every-line-filed-right.png`   | 1290 × 2796 | App Store (iOS 6.7") | EVERY LINE FILED RIGHT |
+| `ios/04-dictate-edit-tag.png`         | 1290 × 2796 | App Store (iOS 6.7") | DICTATE. EDIT. TAG. |
+| `ios/05-setup-privacy.png`            | 1290 × 2796 | App Store (iOS 6.7") | PRIVACY FIRST |
 | `macos/01-dashboard.png`       | 2560 × 1600 | Mac App Store | A studio for the second draft of your second novel |
 | `macos/02-project-notes.png`   | 2560 × 1600 | Mac App Store | Every note knows where it belongs |
 | `macos/03-note-editor.png`     | 2560 × 1600 | Mac App Store | Tag a line with every character it touches |
@@ -26,7 +32,8 @@ The script logs in as the seeded `admin@scribeverse.app` user, hides the Emergen
 
 ## Requirements met
 
-- **Mac App Store**: 1280 × 800 min, 2880 × 1800 recommended → we ship **2560 × 1600** (Retina MBP 13" native), exceeds minimum and uploads cleanly to App Store Connect.
+- **App Store (iOS 6.7")**: 1290 × 2796 required → we ship exactly that.
+- **Mac App Store**: 1280 × 800 min, 2880 × 1800 recommended → we ship **2560 × 1600** (Retina MBP 13" native).
 - **Microsoft Store**: 1366 × 768 min, 1920 × 1080 recommended → we ship **1920 × 1080**, matches recommended.
 - Format: PNG, sRGB, no alpha channel.
 
