@@ -222,8 +222,8 @@ SilverWolfe Application Development ("we," "us," or "our") operates the Writer's
 
 1. Data Collection and Use
 We believe in user privacy. Because Writer's Helper is a stand-alone application, we do not collect, store, or transmit any personally identifiable information (PII) to external servers.
-  • Personal Data: We do not collect any personal data such as names, email addresses, or phone numbers.
-  • Usage Data: Any data created or stored within the app is saved locally on your device and is not accessible by us.
+  • Personal Data: We do collect personal data such as names, email addresses. This is used for MongoDB authentication.
+  • Usage Data: Any data created or stored within the app is saved in the MongoDB and we will not use nor sell your data for marketing purposes.
 
 2. Permissions
 The app may request certain permissions to function correctly (e.g., Microphone). These permissions are used strictly for the app's core functionality:
@@ -233,7 +233,7 @@ The app may request certain permissions to function correctly (e.g., Microphone)
 We do not use third-party analytics, advertising networks, or tracking software that monitors your activity across other apps or websites.
 
 4. Security
-The security of your data is important to us, but remember that no method of electronic storage is 100% secure. While we rely on the built-in security features of iOS to protect your local data, we encourage you to use device-level security (Passcode, FaceID, or TouchID) to protect your information.
+The security of your data is important to us, but remember that no method of electronic storage is 100% secure. While we rely on the built-in security features of macOS and iOS to protect your data, we encourage you to use device-level security (Passcode, FaceID, or TouchID) to protect your information.
 
 5. Children's Privacy
 Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.

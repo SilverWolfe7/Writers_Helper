@@ -42,12 +42,12 @@ export default function PrivacyPolicyPage() {
           </p>
           <ul className="list-disc pl-6 space-y-2 mt-4">
             <li>
-              <strong>Personal Data:</strong> We do not collect any personal data such as names, email
-              addresses, or phone numbers.
+              <strong>Personal Data:</strong> We do collect personal data such as names, email addresses. This
+              is used for MongoDB authentication.
             </li>
             <li>
-              <strong>Usage Data:</strong> Any data created or stored within the app is saved locally on your
-              device and is not accessible by us.
+              <strong>Usage Data:</strong> Any data created or stored within the app is saved in the MongoDB
+              and we will not use nor sell your data for marketing purposes.
             </li>
           </ul>
         </Section>
@@ -76,8 +76,8 @@ export default function PrivacyPolicyPage() {
         <Section title="4. Security">
           <p>
             The security of your data is important to us, but remember that no method of electronic storage is
-            100% secure. While we rely on the built-in security features of iOS to protect your local data, we
-            encourage you to use device-level security (Passcode, FaceID, or TouchID) to protect your
+            100% secure. While we rely on the built-in security features of macOS and iOS to protect your data,
+            we encourage you to use device-level security (Passcode, FaceID, or TouchID) to protect your
             information.
           </p>
         </Section>
