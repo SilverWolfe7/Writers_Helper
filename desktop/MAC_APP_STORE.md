@@ -60,11 +60,7 @@ Use Apple's Transporter app (free on the Mac App Store) — it's the easiest pat
 
 ## Submit for review
 1. App Store Connect → My Apps → Writer's Helper (macOS) → "+ Version or Platform".
-2. Fill in:
-   - **Description**, keywords, support URL, marketing URL
-   - **App Privacy**: Microphone (used for dictation, not linked to identity), Speech Recognition (same), Email (account creation only)
-   - **App Review Information**: include the seeded login `admin@scribeverse.app` / `admin123` so the reviewer can dictate without registering
-   - Screenshots: 1280×800 or 1440×900 — capture from the running `.app` on a clean desktop
+2. Paste the listing copy from **`/app/STORE_LISTING.md`** — single source of truth for description, keywords, App Privacy answers, App Review notes, and screenshot captions across both stores.
 3. Pick the build you uploaded via Transporter.
 4. Submit for review. Mac App Store reviews typically take 24-72h.
 

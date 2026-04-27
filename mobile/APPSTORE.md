@@ -57,6 +57,9 @@ eas submit --platform ios --latest
 - Screenshots: at least one set at 6.7" or 6.5" iPhone size.
 - Privacy Policy URL: required because we collect emails. Self-host or use a generator like https://app-privacy-policy-generator.firebaseapp.com/.
 
+## Listing copy (description, keywords, privacy, screenshots)
+**All store-listing fields live in `/app/STORE_LISTING.md`** — single source of truth for the iOS App Store and Mac App Store. Open it, paste the relevant section into App Store Connect.
+
 ## Common rejection causes (and how we already handle them)
 | Risk | Mitigation |
 |---|---|
