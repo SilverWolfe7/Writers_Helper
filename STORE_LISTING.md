@@ -194,12 +194,20 @@ Email support@writers-helper.app with feature requests — they go straight into
 
 ### macOS — required (1280 × 800 minimum, 2880 × 1800 recommended)
 
-| # | Caption | Source screen |
-|---|---|---|
-| 1 | A studio for the second draft of your second novel | Dashboard |
-| 2 | Dictate at your desk. Edit on the page. | Dictation canvas wide |
-| 3 | Every note knows where it belongs | Project detail with multi-tag chips |
-| 4 | Plain text in. Plain text out. | TXT export dialog |
+Captured at **2560 × 1600** (Retina MBP 13" native) via `/app/scripts/capture_store_screenshots.py`. Files in `/app/store-screenshots/macos/`.
+
+| # | File | Caption | Source screen |
+|---|---|---|---|
+| 1 | `01-dashboard.png` | A studio for the second draft of your second novel | Projects dashboard |
+| 2 | `02-project-notes.png` | Every note knows where it belongs | Project detail · Notes tab |
+| 3 | `03-note-editor.png` | Tag a line with every character it touches | Note editor with character chips |
+| 4 | `04-dictate.png` | Dictate at your desk. Edit on the page. | Dictation canvas |
+| 5 | `05-characters.png` | A cast, kept close at hand | Project detail · Characters tab |
+| 6 | `06-acts.png` | Three acts. One quiet workspace. | Project detail · Acts tab |
+
+### Windows (Microsoft Store) — required (1366 × 768 minimum, 1920 × 1080 recommended)
+
+Captured at **1920 × 1080** by the same script. Files in `/app/store-screenshots/windows/`.
 
 ---
 

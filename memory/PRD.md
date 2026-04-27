@@ -29,6 +29,16 @@
 - Frontend: editorial UI with dedicated dashboard, project workspace (tabs), dictation canvas (Web Speech API + manual textarea fallback), multi-select character chips, chapter/act dropdowns.
 - Seeded admin (`admin@scribeverse.app` / `admin123`).
 - Test suite: `/app/backend/tests/backend_test.py` (14 tests, all passing).
+- Mobile (Expo/React Native) scaffold in `/app/mobile` with App Store metadata.
+- Desktop (Electron) wrapper in `/app/desktop` with `electron-updater` wired to GitHub Releases.
+- Privacy Policy page at `/privacy`.
+- iOS App Store screenshots captured (5/5).
+
+## 2026-04-27 — Desktop store screenshots (this session)
+- Added `/app/scripts/capture_store_screenshots.py` — Playwright script that logs in, seeds a rich demo ("The Hollow Lantern"), hides the Emergent preview badge, and captures a 6-shot tour (dashboard, notes, editor, dictate, characters, acts).
+- Added `/app/scripts/seed_demo_project.py` — idempotent seed for the demo project (4 characters, 3 acts, 5 chapters, 7 notes) so screenshots can be re-captured after any DB reset.
+- Output: 2560×1600 PNGs in `/app/store-screenshots/macos/` (Mac App Store) + 1920×1080 PNGs in `/app/store-screenshots/windows/` (Microsoft Store).
+- Updated `STORE_LISTING.md` §8 with the final 6-shot macOS + Windows lineup and captions.
 
 ## Backlog
 ### P1 (next up)
