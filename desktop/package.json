@@ -15,7 +15,10 @@
     "package": "electron-builder",
     "package:mac": "electron-builder --mac",
     "package:win": "electron-builder --win",
-    "package:linux": "electron-builder --linux"
+    "package:linux": "electron-builder --linux",
+    "release:mac": "electron-builder --mac --publish always",
+    "release:win": "electron-builder --win --publish always",
+    "release:linux": "electron-builder --linux --publish always"
   },
   "build": {
     "appId": "app.writershelper.desktop",
@@ -84,8 +87,10 @@
     },
     "publish": [
       {
-        "provider": "generic",
-        "url": "https://updates.writers-helper.app/desktop/${os}/${arch}/"
+        "provider": "github",
+        "owner": "SilverWolfe7",
+        "repo": "Writers_Helper",
+        "releaseType": "release"
       }
     ]
   },

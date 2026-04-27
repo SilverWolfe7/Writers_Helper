@@ -54,36 +54,49 @@ Flow:
 3. Once the download finishes, the user sees a native dialog: **"Restart now / Later"**.
 4. **Help → Check for updates…** lets users force a manual check at any time.
 
-Update channel is configured in `package.json → build.publish` to a `generic` provider:
+### Update channel: GitHub Releases (public repo)
+
+Configured in `package.json → build.publish`:
+```json
+{
+  "provider": "github",
+  "owner": "SilverWolfe7",
+  "repo": "Writers_Helper",
+  "releaseType": "release"
+}
 ```
-https://updates.writers-helper.app/desktop/${os}/${arch}/
-```
+
+Because the repo is **public**, end-user installs auto-update without any token — `electron-updater` reads release manifests directly from the GitHub Releases API.
 
 ### Releasing a new version
 
-1. Bump the version in `/app/desktop/package.json`.
-2. Build the binaries on each target OS:
+1. Bump the version in `/app/desktop/package.json` (semver: 1.0.0 → 1.0.1, etc.). The Git tag created by GitHub will be `v<version>`.
+2. Get a GitHub Personal Access Token with the **`repo`** scope (or fine-grained: `Contents: read & write` on the repo) and export it:
    ```bash
-   yarn package:linux   # AppImage
-   yarn package:mac     # dmg + zip (on a Mac)
-   yarn package:win     # nsis + portable (on Windows)
+   export GH_TOKEN=ghp_…
    ```
-3. Each build emits a binary **plus a `latest*.yml` manifest** to `dist/`:
-   - macOS: `latest-mac.yml`
-   - Windows: `latest.yml`
-   - Linux: `latest-linux.yml`
-4. Upload both the binary **and** its matching `.yml` to your update host at the URL configured in `build.publish`. For the default config:
-   - `https://updates.writers-helper.app/desktop/mac/arm64/Writer's Helper-1.2.0-arm64.dmg`
-   - `https://updates.writers-helper.app/desktop/mac/arm64/latest-mac.yml`
-5. Existing installs check the matching `latest*.yml` on next launch and download the new version automatically.
+3. Build **and** publish for each target OS:
+   ```bash
+   yarn release:linux   # AppImage  → uploads to a draft release on SilverWolfe7/Writers_Helper
+   yarn release:mac     # dmg + zip (run on a Mac)
+   yarn release:win     # nsis + portable (run on Windows)
+   ```
+   Each command both builds the binaries and uploads them — plus the `latest*.yml` manifests — to a single draft GitHub release tagged `v<version>`.
+4. Open https://github.com/SilverWolfe7/Writers_Helper/releases, review the draft, and click **Publish release**. The instant a release is published (not draft), every existing install will see the update on its next launch.
 
-### Switching to GitHub releases (recommended for OSS)
+> Tip: run all three `release:*` commands across machines, **then** publish the draft. That way every OS gets the update simultaneously.
 
-Replace the `publish` block in `package.json` with:
-```json
-"publish": [{ "provider": "github", "owner": "<your-org>", "repo": "writers-helper-desktop" }]
+### Manual fallback (no GH_TOKEN)
+
+If you'd rather upload binaries by hand:
+```bash
+yarn package:linux
+gh release create v1.0.1 \
+  "dist/Writer's Helper-1.0.1.AppImage" \
+  "dist/latest-linux.yml" \
+  --title "v1.0.1" --notes "What's new…"
 ```
-Then `GH_TOKEN=… yarn package:mac --publish always` does the build **and** uploads to a GitHub release in one shot. Updates flow from there.
+The same pattern works for `latest-mac.yml` + `*.dmg` and `latest.yml` + `*.exe`.
 
 ### Code-signing requirements for auto-update
 - **macOS**: builds must be signed AND notarized — unsigned dmgs cannot auto-update (Gatekeeper).
