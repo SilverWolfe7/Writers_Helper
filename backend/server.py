@@ -591,12 +591,16 @@ async def export_project(project_id: str, user: dict = Depends(get_current_user)
 # --- Router + startup ---
 app.include_router(api_router)
 
-frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:3000")
-allowed_origins = [frontend_url]
-for extra in os.environ.get("CORS_ORIGINS", "").split(","):
-    extra = extra.strip()
-    if extra and extra != "*" and extra not in allowed_origins:
-        allowed_origins.append(extra)
+cors_origins = os.environ.get("CORS_ORIGINS", "").strip()
+if cors_origins == "*":
+    allowed_origins = ["*"]
+else:
+    frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+    allowed_origins = [frontend_url]
+    for extra in cors_origins.split(","):
+        extra = extra.strip()
+        if extra and extra not in allowed_origins:
+            allowed_origins.append(extra)
 
 app.add_middleware(
     CORSMiddleware,
