@@ -83,3 +83,4 @@ android-sdk/desktop/node_modules/electron/dist/electron
 desktop/dist/Writer's
 Helper-1.0.0.AppImage
 desktop/dist/linux-unpacked/writers-helper-desktop
+desktop/node_modules/electron/dist/electron

@@ -3,10 +3,11 @@
  *
  * Loads the deployed Writer's Helper web app in a native browser window with
  * automatic microphone permission for our origin and external links opened
- * in the user's default browser.
+ * in the user's default browser. Auto-updates via electron-updater.
  */
-const { app, BrowserWindow, Menu, shell } = require("electron");
+const { app, BrowserWindow, Menu, dialog, shell } = require("electron");
 const path = require("path");
+const { autoUpdater } = require("electron-updater");
 
 const APP_URL =
   process.env.WRITERS_HELPER_URL ||
@@ -146,6 +147,11 @@ function buildMenu() {
           click: () =>
             mainWindow && mainWindow.loadURL(`${APP_ORIGIN}/setup`),
         },
+        { type: "separator" },
+        {
+          label: "Check for updates…",
+          click: () => checkForUpdatesManually(),
+        },
       ],
     },
   ];
@@ -154,9 +160,80 @@ function buildMenu() {
 
 app.setName("Writer's Helper");
 
+// ----- Auto-update -----
+let manualUpdateCheck = false;
+
+function configureAutoUpdater() {
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = true;
+  autoUpdater.allowPrerelease = false;
+
+  autoUpdater.on("error", (err) => {
+    console.error("[updater] error:", err?.message || err);
+    if (manualUpdateCheck) {
+      manualUpdateCheck = false;
+      dialog.showMessageBox(mainWindow, {
+        type: "error",
+        title: "Update check failed",
+        message: "Couldn't check for updates right now.",
+        detail: String(err?.message || err),
+      });
+    }
+  });
+
+  autoUpdater.on("update-not-available", () => {
+    if (manualUpdateCheck) {
+      manualUpdateCheck = false;
+      dialog.showMessageBox(mainWindow, {
+        type: "info",
+        title: "You're up to date",
+        message: `Writer's Helper ${app.getVersion()} is the latest version.`,
+      });
+    }
+  });
+
+  autoUpdater.on("update-available", (info) => {
+    console.log("[updater] update available:", info?.version);
+  });
+
+  autoUpdater.on("update-downloaded", async (info) => {
+    manualUpdateCheck = false;
+    const { response } = await dialog.showMessageBox(mainWindow, {
+      type: "info",
+      buttons: ["Restart now", "Later"],
+      defaultId: 0,
+      cancelId: 1,
+      title: "Update ready",
+      message: `Writer's Helper ${info?.version} has been downloaded.`,
+      detail: "Restart now to apply the update.",
+    });
+    if (response === 0) autoUpdater.quitAndInstall();
+  });
+}
+
+function checkForUpdatesManually() {
+  if (!app.isPackaged) {
+    dialog.showMessageBox(mainWindow, {
+      type: "info",
+      title: "Update check unavailable",
+      message: "Auto-update only runs in packaged builds.",
+      detail: "Run yarn package to produce a release binary.",
+    });
+    return;
+  }
+  manualUpdateCheck = true;
+  autoUpdater.checkForUpdates().catch((err) => console.error("[updater] manual check failed:", err));
+}
+
 app.whenReady().then(() => {
   buildMenu();
   createWindow();
+  configureAutoUpdater();
+  if (app.isPackaged) {
+    autoUpdater
+      .checkForUpdatesAndNotify()
+      .catch((err) => console.error("[updater] startup check failed:", err));
+  }
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
