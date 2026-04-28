@@ -10,17 +10,18 @@ This document covers shipping the **Electron desktop app** at `/app/desktop` to 
 
 ## One-time setup (must be done on a Mac)
 1. **Apple Developer Program membership** ($99/yr).
-2. In **Certificates, Identifiers & Profiles** at https://developer.apple.com/account/resources:
+2. **Node.js ≥ 22.12** (electron-builder 26 requires it; older Node 20 throws `url.parse() is deprecated` and dies). Easiest path: `nvm use` (the repo ships an `.nvmrc`) or `brew install node@22`.
+3. In **Certificates, Identifiers & Profiles** at https://developer.apple.com/account/resources:
    - Register the App ID **`app.writershelper.desktop`** (matches `package.json → build.appId`). Enable the "App Sandbox" capability.
    - Create a **Mac Installer Distribution** certificate (download + double-click into Keychain).
    - Create a **3rd Party Mac Developer Application** certificate (same).
    - Generate a **Mac App Store** provisioning profile for `app.writershelper.desktop` and download it.
-3. Place the downloaded `.provisionprofile` at:
+4. Place the downloaded `.provisionprofile` at:
    ```
    /app/desktop/build-assets/embedded.provisionprofile
    ```
    (This is the path referenced from `build.mas.provisioningProfile` in `package.json`. For a `mas-dev` build, save the development profile as `development.provisionprofile` in the same folder.)
-4. In **App Store Connect** → My Apps → "+", create a new macOS app:
+5. In **App Store Connect** → My Apps → "+", create a new macOS app:
    - Bundle ID: `app.writershelper.desktop`
    - Name: Writer's Helper
    - SKU: anything unique
