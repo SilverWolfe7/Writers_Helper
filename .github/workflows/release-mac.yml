@@ -1,0 +1,130 @@
+name: Release — macOS (DMG + MAS PKG)
+
+# Builds the Writer's Helper desktop app on macos-latest whenever a tag
+# matching v*.*.* is pushed. Produces:
+#   - Universal Apple-silicon + Intel `.dmg` (signed with Developer ID)
+#   - Universal Apple-silicon + Intel `.pkg` for the Mac App Store
+# Both are uploaded as artifacts and attached to the GitHub Release for that tag.
+#
+# REQUIRED REPO SECRETS (Settings → Secrets and variables → Actions → New secret)
+# ─────────────────────────────────────────────────────────────────────────────
+#  APPLE_ID                          Your Apple ID email
+#  APPLE_APP_SPECIFIC_PASSWORD       App-specific password (https://appleid.apple.com)
+#  APPLE_TEAM_ID                     10-char team identifier from developer.apple.com
+#
+#  CSC_LINK                          Base64-encoded `.p12` containing BOTH
+#                                    "Developer ID Application" + "3rd Party Mac
+#                                    Developer Application" certs.
+#                                      base64 -i certs.p12 | pbcopy
+#  CSC_KEY_PASSWORD                  Password used when exporting the .p12
+#
+#  MAS_INSTALLER_CSC_LINK            Base64-encoded `.p12` containing the
+#                                    "3rd Party Mac Developer Installer" cert
+#                                    (used to sign the .pkg).
+#  MAS_INSTALLER_CSC_KEY_PASSWORD    Password for the installer .p12
+#
+#  MAS_PROVISIONING_PROFILE          Base64-encoded `embedded.provisionprofile`
+#                                    (Mac App Store provisioning profile).
+#                                      base64 -i embedded.provisionprofile | pbcopy
+#
+# Optional (only if you want notarized DMGs delivered automatically):
+#  GH_TOKEN                          A PAT with `repo` scope. The default
+#                                    GITHUB_TOKEN works too — exposed below as
+#                                    GH_TOKEN so electron-builder picks it up.
+#
+# To trigger a release:
+#   git tag v1.0.1 && git push origin v1.0.1
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Build target (dmg | pkg | both)'
+        required: false
+        default: 'both'
+        type: choice
+        options: [dmg, pkg, both]
+
+jobs:
+  build-mac:
+    name: Build macOS bundles
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        working-directory: desktop
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'yarn'
+          cache-dependency-path: desktop/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Decode and install Mac App Store provisioning profile
+        if: ${{ github.event_name == 'push' || github.event.inputs.target != 'dmg' }}
+        run: |
+          mkdir -p build-assets
+          echo "${{ secrets.MAS_PROVISIONING_PROFILE }}" | base64 --decode > build-assets/embedded.provisionprofile
+          # Also stage in the system location so codesign can pick it up:
+          PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PP_DIR"
+          cp build-assets/embedded.provisionprofile "$PP_DIR/embedded.provisionprofile"
+
+      - name: Build signed DMG
+        if: ${{ github.event_name == 'push' || github.event.inputs.target == 'dmg' || github.event.inputs.target == 'both' }}
+        env:
+          # Developer ID cert (.p12) for the DMG channel
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # Notarization
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # Publish to the GitHub Release for this tag
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn release:mac
+
+      - name: Build sandboxed MAS PKG
+        if: ${{ github.event_name == 'push' || github.event.inputs.target == 'pkg' || github.event.inputs.target == 'both' }}
+        env:
+          # Application cert (3rd Party Mac Developer Application)
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # Installer cert (3rd Party Mac Developer Installer) — used to sign the .pkg
+          CSC_INSTALLER_LINK: ${{ secrets.MAS_INSTALLER_CSC_LINK }}
+          CSC_INSTALLER_KEY_PASSWORD: ${{ secrets.MAS_INSTALLER_CSC_KEY_PASSWORD }}
+        run: yarn package:mas
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: writers-helper-macos-${{ github.ref_name }}
+          path: |
+            desktop/dist/*.dmg
+            desktop/dist/*.pkg
+            desktop/dist/*.zip
+            desktop/dist/latest-mac.yml
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Attach PKG to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            desktop/dist/*.pkg
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

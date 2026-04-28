@@ -1,0 +1,49 @@
+name: Release — Linux (AppImage)
+
+# Builds the Linux AppImage on every v*.*.* tag and attaches it to the matching
+# GitHub Release. No code-signing required for AppImage.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: Build Linux AppImage
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    defaults:
+      run:
+        working-directory: desktop
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'yarn'
+          cache-dependency-path: desktop/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build AppImage
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn release:linux
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: writers-helper-linux-${{ github.ref_name }}
+          path: |
+            desktop/dist/*.AppImage
+            desktop/dist/latest-linux.yml
+          if-no-files-found: warn
+          retention-days: 30

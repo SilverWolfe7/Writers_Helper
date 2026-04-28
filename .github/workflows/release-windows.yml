@@ -1,0 +1,53 @@
+name: Release — Windows (NSIS .exe + portable)
+
+# Builds the Windows installer on every v*.*.* tag and attaches it to the
+# matching GitHub Release. Code-signing is optional — set WIN_CSC_LINK +
+# WIN_CSC_KEY_PASSWORD secrets to sign with a Windows code-signing certificate.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build Windows binaries
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        working-directory: desktop
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'yarn'
+          cache-dependency-path: desktop/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build Windows installer
+        env:
+          # Optional code-signing — leave secrets unset to ship unsigned binaries.
+          CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn release:win
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: writers-helper-windows-${{ github.ref_name }}
+          path: |
+            desktop/dist/*.exe
+            desktop/dist/latest.yml
+          if-no-files-found: warn
+          retention-days: 30
