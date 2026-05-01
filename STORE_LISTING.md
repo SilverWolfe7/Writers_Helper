@@ -226,7 +226,7 @@ Captured at **1920 × 1080** by the same script. Files in `/app/store-screenshot
 Privacy Policy
 Last Updated: April 27, 2026
 
-SilverWolfe Application Development ("we," "us," or "our") operates the Writer's Helper application (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service.
+L J Naeyaert ("we," "us," or "our") operates the Writer's Helper application (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service.
 
 1. Data Collection and Use
 We believe in user privacy. Because Writer's Helper is a stand-alone application, we do not collect, store, or transmit any personally identifiable information (PII) to external servers.

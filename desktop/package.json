@@ -6,7 +6,7 @@
   "main": "main.js",
   "private": true,
   "author": {
-    "name": "Writer's Helper",
+    "name": "L J Naeyaert",
     "email": "support@writers-helper.app"
   },
   "scripts": {
@@ -26,7 +26,7 @@
   "build": {
     "appId": "app.writershelper.desktop",
     "productName": "Writer's Helper",
-    "copyright": "Copyright © 2026 Writer's Helper",
+    "copyright": "Copyright © 2026 L J Naeyaert",
     "directories": {
       "output": "dist",
       "buildResources": "build-assets"

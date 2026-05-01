@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
 
         <Section>
           <p>
-            SilverWolfe Application Development (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the
+            L J Naeyaert (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the
             Writer&rsquo;s Helper application (the &quot;Service&quot;). This page informs you of our policies
             regarding the collection, use, and disclosure of personal data when you use our Service.
           </p>
